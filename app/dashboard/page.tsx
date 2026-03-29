@@ -10,6 +10,43 @@ export default function Dashboard() {
   const [profile, setProfile] = useState<any>(null);
   const router = useRouter();
 
+  const updateStreak = async (userId: string) => {
+    const today = new Date();
+    const todayStr = today.toDateString();
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("streak, last_active")
+      .eq("id", userId)
+      .single();
+
+    let newStreak = 1;
+
+    if (data?.last_active) {
+      const lastDate = new Date(data.last_active);
+      const lastStr = lastDate.toDateString();
+
+      const yesterday = new Date();
+      yesterday.setDate(today.getDate() - 1);
+
+      if (lastStr === yesterday.toDateString()) {
+        newStreak = (data.streak || 0) + 1;
+      } else if (lastStr === todayStr) {
+        newStreak = data.streak;
+      }
+    }
+
+    await supabase
+      .from("profiles")
+      .update({
+        streak: newStreak,
+        last_active: new Date().toISOString(),
+      })
+      .eq("id", userId);
+
+    return newStreak;
+  };
+
   useEffect(() => {
     const loadData = async () => {
       const { data: userData } = await supabase.auth.getUser();
@@ -28,7 +65,13 @@ export default function Dashboard() {
         .eq("id", user.id)
         .single();
 
-      setProfile(data);
+      let streakValue = data?.streak || 1;
+
+      if (data) {
+        streakValue = await updateStreak(user.id);
+      }
+
+      setProfile({ ...data, streak: streakValue });
     };
 
     loadData();
@@ -74,6 +117,14 @@ export default function Dashboard() {
         <p className="mb-6">
           Birthday: {profile?.birthday || "Not set"}
         </p>
+
+        {/* ✅ STREAK CARD */}
+        <div className="mt-6 p-6 bg-white rounded-xl shadow text-center">
+          <h3 className="text-xl font-bold">🔥 Streak</h3>
+          <p className="text-4xl mt-2">
+            {profile?.streak || 1} days
+          </p>
+        </div>
 
       </div>
     </main>

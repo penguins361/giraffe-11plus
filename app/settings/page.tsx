@@ -1,17 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Dashboard() {
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
+export default function Settings() {
+  const [name, setName] = useState("");
+  const [examBoard, setExamBoard] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(true);
+
   const router = useRouter();
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadProfile = async () => {
       const { data: userData } = await supabase.auth.getUser();
       const user = userData.user;
 
@@ -20,26 +24,50 @@ export default function Dashboard() {
         return;
       }
 
-      setUser(user);
-
       const { data } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user.id)
         .single();
 
-      setProfile(data);
+      if (data) {
+        setName(data.name || "");
+        setExamBoard(data.exam_board || "");
+        setBirthday(data.birthday || "");
+      }
     };
 
-    loadData();
+    loadProfile();
   }, [router]);
+
+  const handleSave = async () => {
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
+
+    if (!user) return;
+
+    const { error } = await supabase.from("profiles").upsert({
+      id: user.id,
+      name: name,
+      exam_board: examBoard,
+      birthday: birthday,
+    });
+
+    if (error) {
+      setMessage("❌ Failed to save settings");
+      setSuccess(false);
+    } else {
+      setMessage("✅ Settings saved!");
+      setSuccess(true);
+    }
+  };
 
   return (
     <main className="min-h-screen flex bg-yellow-400">
 
       {/* Sidebar */}
-      <div className="w-64 bg-yellow-600 p-6 flex flex-col">
-        <h2 className="title mb-6">Dashboard</h2>
+      <div className="w-64 bg-yellow-600 text-black p-6 flex flex-col">
+        <h2 className="title mb-6">Settings</h2>
 
         <div className="flex flex-col gap-2">
           <Link href="/dashboard">
@@ -69,21 +97,53 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Main */}
-      <div className="flex-1 p-10 bg-yellow-100 text-black">
+      {/* Main Content */}
+      <div className="flex-1 p-10 bg-white text-black">
 
-        <h1 className="text-3xl font-bold mb-6">
-          Welcome {profile?.name || user?.email}
-        </h1>
+        <h1 className="text-3xl font-bold mb-6">Account Settings</h1>
 
-        <p className="mb-2">
-          Exam Board: {profile?.exam_board || "Not set"}
-        </p>
+        {/* MESSAGE */}
+        {message && (
+          <p className={`mb-4 font-semibold ${success ? "text-green-600" : "text-red-600"}`}>
+            {message}
+          </p>
+        )}
 
-        <p className="mb-6">
-          Birthday: {profile?.birthday || "Not set"}
-        </p>
+        <div className="max-w-xl space-y-6">
 
+          <input
+            type="text"
+            placeholder="Child's Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-3 border rounded-lg"
+          />
+
+          <select
+            value={examBoard}
+            onChange={(e) => setExamBoard(e.target.value)}
+            className="w-full p-3 border rounded-lg"
+          >
+            <option value="">Select exam board</option>
+            <option value="GL">GL</option>
+            <option value="CEM">CEM</option>
+          </select>
+
+          <input
+            type="date"
+            value={birthday}
+            onChange={(e) => setBirthday(e.target.value)}
+            className="w-full p-3 border rounded-lg"
+          />
+
+          <button
+            onClick={handleSave}
+            className="bg-yellow-500 px-6 py-3 rounded-lg font-bold hover:bg-yellow-600"
+          >
+            Save Changes
+          </button>
+
+        </div>
       </div>
     </main>
   );
