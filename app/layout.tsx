@@ -1,5 +1,5 @@
-import "./globals.css";
 import "./styles.css";
+import "./globals.css";
 
 export const metadata = {
   title: "Giraffe 11+ Academy",
