@@ -1,0 +1,145 @@
+/* ===== Base Font ===== */
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* ===== Text ===== */
+.title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.hero-title {
+  font-size: 52px;
+  font-weight: 700;
+}
+
+/* ===== Logo ===== */
+.logo {
+  width: 110px; /* slightly bigger */
+}
+
+/* ===== Giraffe ===== */
+.giraffe {
+  width: 340px;
+  transition: transform 0.3s ease;
+}
+
+.giraffe:hover {
+  transform: scale(1.05);
+}
+
+/* ===== Buttons ===== */
+.btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: black;
+  color: white;
+}
+
+.btn.primary:hover {
+  background: #333;
+  transform: scale(1.08);
+}
+
+.btn.secondary {
+  color: black;
+}
+
+.btn.secondary:hover {
+  transform: scale(1.08);
+}
+
+.btn.big {
+  padding: 16px 28px;
+  font-size: 18px;
+}
+
+/* ===== Cards ===== */
+.card {
+  padding: 26px;
+  border-radius: 18px;
+  background: #f3f4f6;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+/* ===== Inputs (FIXED VERSION) ===== */
+.input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: white;
+  color: black;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input::placeholder {
+  color: #666;
+}
+
+.input:focus {
+  border-color: black;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+/* ===== Error / Success ===== */
+.error-text {
+  color: #dc2626;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.success-text {
+  color: #16a34a;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* ===== Floating pencils ===== */
+.floating {
+  position: absolute;
+  font-size: 30px;
+  pointer-events: none;
+  transition: transform 0.2s linear;
+}
+
+/* Positions */
+.p0 { top: 10%; left: 10%; }
+.p1 { top: 20%; left: 80%; }
+.p2 { top: 60%; left: 15%; }
+.p3 { top: 70%; left: 70%; }
+.p4 { top: 40%; left: 50%; }
+
+.hero-title {
+  font-size: 52px;
+  font-weight: 700;
+  color: black;
+}
+
+.sidebar-link {
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.sidebar-link:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: translateX(4px);
+}
