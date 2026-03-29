@@ -81,16 +81,25 @@ export default function Dashboard() {
     <main className="min-h-screen flex bg-yellow-400">
 
       {/* Sidebar */}
-      <div className="w-64 bg-yellow-600 p-6 flex flex-col">
-        <h2 className="title mb-6">Dashboard</h2>
+      <div className="w-64 bg-yellow-600 text-black p-6 flex flex-col">
+        <h2 className="title mb-6">Settings</h2>
 
-        <Link href="/dashboard">
-          <button className="sidebar-link">🏠 Home</button>
-        </Link>
+        <div className="flex flex-col gap-2">
+          <Link href="/dashboard">
+            <button className="sidebar-link">🏠 Home</button>
+          </Link>
 
-        <Link href="/settings">
-          <button className="sidebar-link">⚙️ Settings</button>
-        </Link>
+          <button className="sidebar-link">📊 Progress</button>
+          <button className="sidebar-link">🧠 Maths</button>
+          <button className="sidebar-link">🔤 English</button>
+          <button className="sidebar-link">🧩 VR</button>
+          <button className="sidebar-link">🎮 Games</button>
+          <button className="sidebar-link">🧍 Avatar</button>
+
+          <Link href="/settings">
+            <button className="sidebar-link">⚙️ Settings</button>
+          </Link>
+        </div>
 
         <button
           className="btn primary mt-auto"
