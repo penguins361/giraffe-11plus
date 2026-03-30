@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import "./styles.css";
 
 export default function Home() {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });

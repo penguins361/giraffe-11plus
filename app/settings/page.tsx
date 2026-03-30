@@ -11,6 +11,7 @@ export default function Settings() {
   const [birthday, setBirthday] = useState("");
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const router = useRouter();
 
@@ -48,9 +49,9 @@ export default function Settings() {
 
     const { error } = await supabase.from("profiles").upsert({
       id: user.id,
-      name: name,
+      name,
       exam_board: examBoard,
-      birthday: birthday,
+      birthday,
     });
 
     if (error) {
@@ -65,25 +66,38 @@ export default function Settings() {
   return (
     <main className="min-h-screen flex bg-yellow-400">
 
-      {/* Sidebar */}
-      <div className="w-64 bg-yellow-600 text-black p-6 flex flex-col">
+      {/* MOBILE TOP BAR */}
+      <div className="md:hidden fixed top-0 left-0 w-full flex justify-between items-center px-4 py-3 bg-yellow-600 shadow-md z-50">
+        <h2 className="font-bold text-lg">🦒 Settings</h2>
+
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="text-2xl"
+        >
+          ☰
+        </button>
+      </div>
+
+      {/* SIDEBAR */}
+      <div
+        className={`
+          fixed top-0 left-0 h-full w-64 bg-yellow-600 p-6 flex flex-col z-50
+          transform transition-transform duration-300
+          ${menuOpen ? "translate-x-0" : "-translate-x-full"}
+          md:translate-x-0 md:static
+        `}
+      >
         <h2 className="title mb-6">Giraffe 11 Plus</h2>
 
         <div className="flex flex-col gap-2">
-          <Link href="/dashboard">
-            <button className="sidebar-link">🏠 Home</button>
-          </Link>
-
+          <Link href="/dashboard"><button className="sidebar-link">🏠 Home</button></Link>
           <button className="sidebar-link">📊 Progress</button>
           <button className="sidebar-link">🧠 Maths</button>
           <button className="sidebar-link">🔤 English</button>
           <button className="sidebar-link">🧩 VR</button>
           <button className="sidebar-link">🎮 Games</button>
-          <button className="sidebar-link">🧍 Avatar</button>
-
-          <Link href="/settings">
-            <button className="sidebar-link">⚙️ Settings</button>
-          </Link>
+        <Link href="/avatar"><button className="sidebar-link">🧍 Avatar</button></Link>
+          <Link href="/settings"><button className="sidebar-link">⚙️ Settings</button></Link>
         </div>
 
         <button
@@ -97,10 +111,20 @@ export default function Settings() {
         </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-10 bg-white text-black">
+      {/* OVERLAY */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
 
-        <h1 className="text-3xl font-bold mb-6">Account Settings</h1>
+      {/* MAIN CONTENT */}
+      <div className="flex-1 p-4 md:p-10 bg-white text-black mt-12 md:mt-0">
+
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">
+          Account Settings
+        </h1>
 
         {/* MESSAGE */}
         {message && (
