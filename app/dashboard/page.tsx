@@ -10,42 +10,48 @@ export default function Dashboard() {
   const [profile, setProfile] = useState<any>(null);
   const router = useRouter();
 
-  const updateStreak = async (userId: string) => {
-    const today = new Date();
-    const todayStr = today.toDateString();
+const updateStreak = async (userId: string) => {
+  const today = new Date();
+  const todayStr = today.toDateString();
 
-    const { data } = await supabase
-      .from("profiles")
-      .select("streak, last_active")
-      .eq("id", userId)
-      .single();
+  const { data } = await supabase
+    .from("profiles")
+    .select("streak, last_active")
+    .eq("id", userId)
+    .single();
 
-    let newStreak = 1;
+  let newStreak = 1;
 
-    if (data?.last_active) {
-      const lastDate = new Date(data.last_active);
-      const lastStr = lastDate.toDateString();
+  if (data?.last_active) {
+    const lastDate = new Date(data.last_active);
+    const lastStr = lastDate.toDateString();
 
-      const yesterday = new Date();
-      yesterday.setDate(today.getDate() - 1);
-
-      if (lastStr === yesterday.toDateString()) {
-        newStreak = (data.streak || 0) + 1;
-      } else if (lastStr === todayStr) {
-        newStreak = data.streak;
-      }
+    // 🟢 CASE 1: already visited today → DO NOTHING
+    if (lastStr === todayStr) {
+      return data.streak || 1;
     }
 
-    await supabase
-      .from("profiles")
-      .update({
-        streak: newStreak,
-        last_active: new Date().toISOString(),
-      })
-      .eq("id", userId);
+    // 🟢 CASE 2: visited yesterday → increase streak
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
-    return newStreak;
-  };
+    if (lastStr === yesterday.toDateString()) {
+      newStreak = (data.streak || 0) + 1;
+    }
+
+    // 🔴 CASE 3: missed a day → reset to 1 (default already)
+  }
+
+  await supabase
+    .from("profiles")
+    .update({
+      streak: newStreak,
+      last_active: new Date().toISOString(),
+    })
+    .eq("id", userId);
+
+  return newStreak;
+};
 
   useEffect(() => {
     const loadData = async () => {
@@ -82,7 +88,7 @@ export default function Dashboard() {
 
       {/* Sidebar */}
       <div className="w-64 bg-yellow-600 text-black p-6 flex flex-col">
-        <h2 className="title mb-6">Settings</h2>
+        <h2 className="title mb-6">Giraffe 11 Plus</h2>
 
         <div className="flex flex-col gap-2">
           <Link href="/dashboard">

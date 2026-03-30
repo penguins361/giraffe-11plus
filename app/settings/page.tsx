@@ -67,7 +67,7 @@ export default function Settings() {
 
       {/* Sidebar */}
       <div className="w-64 bg-yellow-600 text-black p-6 flex flex-col">
-        <h2 className="title mb-6">Settings</h2>
+        <h2 className="title mb-6">Giraffe 11 Plus</h2>
 
         <div className="flex flex-col gap-2">
           <Link href="/dashboard">
